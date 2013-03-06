@@ -15,7 +15,6 @@ requirejs.config
  
 requirejs ["./js/map/mapdisplay","jquery"], (MapDisplay) ->
     map = new MapDisplay $("#map")
-    console.log google
     geocoder = new google.maps.Geocoder()
 
     require ["socketio"], () ->

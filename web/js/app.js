@@ -25,7 +25,6 @@
   requirejs(["./js/map/mapdisplay", "jquery"], function(MapDisplay) {
     var geocoder, map;
     map = new MapDisplay($("#map"));
-    console.log(google);
     geocoder = new google.maps.Geocoder();
     return require(["socketio"], function() {
       var socket;
