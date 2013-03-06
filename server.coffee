@@ -51,7 +51,8 @@ receive = (tweet,nytUrls) ->
                 retLoc = null
                 if loc && loc.results?.length > 0
                     retLoc = loc.results[0].geometry.location
-                else "No geocode for " + tweet.user.location
+                else 
+                    console.log "No geocode for " + tweet.user.location, loc
                 cb(null,retLoc)
     ], (err,results) =>
         console.log "done"
