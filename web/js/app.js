@@ -37,7 +37,7 @@
         from = ((_ref = tweet.article) != null ? (_ref1 = _ref.geo_facet) != null ? _ref1[0] : void 0 : void 0) || "NYC (assumed)";
         textcolor = $.Color({
           hue: baseHue,
-          saturation: 0.66,
+          saturation: 0.26,
           lightness: 0.43,
           alpha: 1
         }).toHexString();

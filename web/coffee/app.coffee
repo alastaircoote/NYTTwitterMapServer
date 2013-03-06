@@ -25,7 +25,7 @@ requirejs ["./js/map/mapdisplay","jquery"], (MapDisplay) ->
             from = tweet.article?.geo_facet?[0] || "NYC (assumed)"
 
 
-            textcolor = $.Color({hue: baseHue, saturation: 0.66, lightness: 0.43, alpha: 1}).toHexString()
+            textcolor = $.Color({hue: baseHue, saturation: 0.26, lightness: 0.43, alpha: 1}).toHexString()
 
             location = tweet.tweet.geo || tweet.tweet.user.location
             $("p",li).html("<p style='color:#{textcolor}'>#{from} -> #{location}")
