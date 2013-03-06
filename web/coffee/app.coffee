@@ -39,4 +39,4 @@ requirejs ["./js/map/mapdisplay","jquery"], (MapDisplay) ->
             $("p",li).html("<p >#{from} -> #{location}")
             li.insertAfter($("#header"))
             if li.parent().children().length == 20
-                li.parent().last().remove()
+                li.parent().children().last().remove()

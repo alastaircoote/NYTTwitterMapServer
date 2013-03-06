@@ -57,7 +57,7 @@
         $("p", li).html("<p >" + from + " -> " + location);
         li.insertAfter($("#header"));
         if (li.parent().children().length === 20) {
-          return li.parent().last().remove();
+          return li.parent().children().last().remove();
         }
       });
     });
