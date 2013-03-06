@@ -1,4 +1,4 @@
-twitter = require "twitter"
+twitter = require "mtwitter"
 config = require "./config"
 http = require "http"
 https = require "https"
@@ -8,10 +8,14 @@ twit = new twitter(config.twitter)
 
 class TwitterMonitor
     start: (@received) =>
-        twit.stream 'statuses/filter', {track:"nytimes"}, (stream) =>
+        console.log "Starting stream"
+        twit.stream 'statuses/filter', {follow:"807095", replies: true, track:"nytimes"}, (stream) =>
             @stream = stream
             stream.on "data", @receiveData
     receiveData: (data) =>
+        console.log "Article received"
+        if !data.user
+            console.log data
         if data.user.location == ''
             return
 

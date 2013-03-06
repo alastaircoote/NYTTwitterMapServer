@@ -19,9 +19,9 @@ app.use("/",express.static(__dirname+"/web"))
 
 
 
-io = socketio.listen(happ)
+io = socketio.listen(happ).set("log level", 2)
 
-happ.listen(80)
+happ.listen(6060)
 #io.set( 'origins', '*:*' )
 
 receive = (tweet,nytUrls) ->
