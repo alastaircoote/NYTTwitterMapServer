@@ -391,16 +391,24 @@ ul#sidebar {
   list-style: none;
   overflow: hidden;
   padding: 0;
-  font-family: "Montserrat";
-  text-transform: uppercase;
-  font-size: 10px;
+  font-family: "Georgia";
+  font-size: 13px;
 }
 ul#sidebar p {
+  font-family: "Montserrat";
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 300;
   margin: 0;
   padding-top: 5px;
-  color: #cccccc;
+  color: #888;
+  text-transform: uppercase;
+}
+ul#sidebar img {
+  display: block;
+  float: right;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  border: solid 1px #222;
 }
 ul#sidebar a:hover {
   background: #222;
@@ -412,6 +420,15 @@ ul#sidebar li {
   border-bottom: solid 1px #222;
   color: #ffffff;
   margin: 0;
+  position: relative;
+}
+ul#sidebar li div.colorbox {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: solid 1px #222;
 }
 ul#sidebar li a {
   color: #ffffff;
@@ -419,9 +436,13 @@ ul#sidebar li a {
   font-weight: normal;
   display: block;
   padding: 10px;
+  padding-right: 40px;
 }
-#header {
+ul#sidebar #header {
   font-size: 26px;
-  font-weight: 700;
+  font-weight: 300;
   padding: 20px 10px;
+  text-transform: uppercase;
+  color: #888;
+  font-family: Montserrat;
 }
