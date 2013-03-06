@@ -1,4 +1,4 @@
-define ["jslib/leaflet","./coordinate","jslib/jsbezier"], (L, Coordinate,jsBezier) ->
+define ["jslib/leaflet","./coordinate","jslib/jsbezier","jslib/jq.color"], (L, Coordinate,jsBezier,jC) ->
 
     window.requestAnimFrame = 
       window.requestAnimationFrame       || 
@@ -12,7 +12,7 @@ define ["jslib/leaflet","./coordinate","jslib/jsbezier"], (L, Coordinate,jsBezie
  
     class LineLayer
         lineWidth: 2
-        constructor: (@fromLatlng,@toLatLng) ->
+        constructor: (@fromLatlng,@toLatLng,@hue) ->
             
         onAdd: (map) =>
             @map = map
@@ -87,11 +87,18 @@ define ["jslib/leaflet","./coordinate","jslib/jsbezier"], (L, Coordinate,jsBezie
             #@canvas.fillStyle="#25426d"
 
             grd = @canvas.createLinearGradient(0, 0, @size.width, @size.height);
-            grd.addColorStop(0, "#25426d");
-            grd.addColorStop(0.3, "#25426d");
-            grd.addColorStop(0.5,"#4e76b1")
-            grd.addColorStop(0.7, "#25426d");
-            grd.addColorStop(1, "#25426d");
+            console.log @hue
+            first = $.Color({hue: @hue, saturation: 0.66, lightness: 0.43, alpha: 1}).toHexString()
+            mid = $.Color({hue: @hue, saturation: 0.56, lightness: 0.69, alpha: 1}).toHexString()
+
+
+
+
+            grd.addColorStop(0, first);
+            grd.addColorStop(0.3, first);
+            grd.addColorStop(0.5,mid)
+            grd.addColorStop(0.7, first);
+            grd.addColorStop(1, first);
            
             @canvas.fillStyle = grd
 

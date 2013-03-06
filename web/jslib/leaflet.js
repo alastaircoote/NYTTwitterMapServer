@@ -1559,7 +1559,6 @@ L.Map = L.Class.extend({
         if (L.Browser.touch) {
             L.DomUtil.addClass(container, 'leaflet-touch');
         }
-        console.log ("hasAnim",this.options.fadeAnimation)
         if (this.options.fadeAnimation) {
             L.DomUtil.addClass(container, 'leaflet-fade-anim');
         }

@@ -18,10 +18,15 @@ requirejs ["./js/map/mapdisplay","jquery"], (MapDisplay) ->
             $("#liConnecting").html("<a>Connected, awaiting tweets</a>")
         socket.on "tweet", (tweet) ->
             $("#liConnecting").remove()
-            map.drawLine tweet.from, tweet.to 
+            baseHue = Math.floor(Math.random() * 30) * 12
+            map.drawLine tweet.from, tweet.to, baseHue
             title = "Could not trace to article"
             li = $("<li><a href='#{tweet.tweet.entities.urls[0].expanded_url}' target='_blank'>#{tweet.tweet.text}<p></p></a></li>")
             from = tweet.article?.geo_facet?[0] || "NYC (assumed)"
+
+
+            textcolor = $.Color({hue: baseHue, saturation: 0.66, lightness: 0.43, alpha: 1}).toHexString()
+
             location = tweet.tweet.geo || tweet.tweet.user.location
-            $("p",li).html("<p>#{from} -> #{location}")
+            $("p",li).html("<p style='color:#{textcolor}'>#{from} -> #{location}")
             li.insertAfter($("#header"))

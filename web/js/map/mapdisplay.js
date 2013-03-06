@@ -15,15 +15,14 @@
         tileLayer = L.tileLayer('http://{s}.tiles.mapbox.com/v3/alastaircoote.map-n7irpmld/{z}/{x}/{y}.png', {
           maxZoom: 18
         });
-        console.log("hi");
         tileLayer.addTo(this.map);
       }
 
-      MapDisplay.prototype.drawLine = function(from, to) {
+      MapDisplay.prototype.drawLine = function(from, to, hue) {
         var Lfrom, Lto, layer;
         Lfrom = new L.LatLng(from.lat, from.lng);
         Lto = new L.LatLng(to.lat, to.lng);
-        layer = new LineLayer(Lfrom, Lto);
+        layer = new LineLayer(Lfrom, Lto, hue);
         return this.map.addLayer(layer);
       };
 

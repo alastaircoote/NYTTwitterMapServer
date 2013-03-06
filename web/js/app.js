@@ -28,14 +28,21 @@
         return $("#liConnecting").html("<a>Connected, awaiting tweets</a>");
       });
       return socket.on("tweet", function(tweet) {
-        var from, li, location, title, _ref, _ref1;
+        var baseHue, from, li, location, textcolor, title, _ref, _ref1;
         $("#liConnecting").remove();
-        map.drawLine(tweet.from, tweet.to);
+        baseHue = Math.floor(Math.random() * 30) * 12;
+        map.drawLine(tweet.from, tweet.to, baseHue);
         title = "Could not trace to article";
         li = $("<li><a href='" + tweet.tweet.entities.urls[0].expanded_url + "' target='_blank'>" + tweet.tweet.text + "<p></p></a></li>");
         from = ((_ref = tweet.article) != null ? (_ref1 = _ref.geo_facet) != null ? _ref1[0] : void 0 : void 0) || "NYC (assumed)";
+        textcolor = $.Color({
+          hue: baseHue,
+          saturation: 0.66,
+          lightness: 0.43,
+          alpha: 1
+        }).toHexString();
         location = tweet.tweet.geo || tweet.tweet.user.location;
-        $("p", li).html("<p>" + from + " -> " + location);
+        $("p", li).html("<p style='color:" + textcolor + "'>" + from + " -> " + location);
         return li.insertAfter($("#header"));
       });
     });

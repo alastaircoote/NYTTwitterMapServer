@@ -2,7 +2,7 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define(["jslib/leaflet", "./coordinate", "jslib/jsbezier"], function(L, Coordinate, jsBezier) {
+  define(["jslib/leaflet", "./coordinate", "jslib/jsbezier", "jslib/jq.color"], function(L, Coordinate, jsBezier, jC) {
     var LineLayer;
     window.requestAnimFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) {
       return window.setTimeout(callback, 1000 / 60);
@@ -11,9 +11,10 @@
 
       LineLayer.prototype.lineWidth = 2;
 
-      function LineLayer(fromLatlng, toLatLng) {
+      function LineLayer(fromLatlng, toLatLng, hue) {
         this.fromLatlng = fromLatlng;
         this.toLatLng = toLatLng;
+        this.hue = hue;
         this.doDraw = __bind(this.doDraw, this);
 
         this.calculatePoints = __bind(this.calculatePoints, this);
@@ -99,15 +100,28 @@
       };
 
       LineLayer.prototype.drawLine = function() {
-        var drawFrame, duration, endTime, grd, percentDrawn, startTime,
+        var drawFrame, duration, endTime, first, grd, mid, percentDrawn, startTime,
           _this = this;
         this.canvas.strokeStyle = "white";
         grd = this.canvas.createLinearGradient(0, 0, this.size.width, this.size.height);
-        grd.addColorStop(0, "#25426d");
-        grd.addColorStop(0.3, "#25426d");
-        grd.addColorStop(0.5, "#4e76b1");
-        grd.addColorStop(0.7, "#25426d");
-        grd.addColorStop(1, "#25426d");
+        console.log(this.hue);
+        first = $.Color({
+          hue: this.hue,
+          saturation: 0.66,
+          lightness: 0.43,
+          alpha: 1
+        }).toHexString();
+        mid = $.Color({
+          hue: this.hue,
+          saturation: 0.56,
+          lightness: 0.69,
+          alpha: 1
+        }).toHexString();
+        grd.addColorStop(0, first);
+        grd.addColorStop(0.3, first);
+        grd.addColorStop(0.5, mid);
+        grd.addColorStop(0.7, first);
+        grd.addColorStop(1, first);
         this.canvas.fillStyle = grd;
         this.canvas.lineCap = "round";
         this.canvas.lineWidth = this.lineWidth;
