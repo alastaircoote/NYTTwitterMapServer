@@ -1,8 +1,9 @@
 twitter = require "twitter"
 config = require "./config"
 http = require "http"
+https = require "https"
 async = require "async"
-
+console.log config
 twit = new twitter(config.twitter)
 
 class TwitterMonitor
@@ -32,7 +33,16 @@ class TwitterMonitor
         @stream.destroy()
     followUrl:(url,cb) =>
         console.log "Fetching " + url
-        http.get url, (res) =>
+        if !url
+            cb("")
+            return
+
+        prot = http
+        if url.indexOf("https://") > -1
+            prot = https
+
+
+        prot.get url, (res) =>
             res.on "end", () =>
                 if res.statusCode == 302 || res.statusCode == 301
                     if res.headers.location

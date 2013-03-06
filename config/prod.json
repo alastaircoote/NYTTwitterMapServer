@@ -1,0 +1,14 @@
+{
+    "twitter": {
+        "consumer_key": "8k6QQOd7pb0r2d02Z36GCQ",
+        "consumer_secret": "LNWyl5XE0ndkQvip6PVLoUz0RKngg9AsXC5ymADwELg",
+        "access_token_key": "18059424-ahLA9EieY3DEoYPReQOoEM1snEWYqy7XYpAKM1JST",
+        "access_token_secret": "s0AtYHcwojPn2P5xE2C8MSGsdaDDZgw12LiwfYjTXZ4"
+    },
+    "nyt":{
+        "articleSearch": "d2bdf7615a15b18ffdb7889d35f04428:13:66889958",
+        "geo":"a646c7bb6eb232d2e4686abd1de8ab3a:19:66889958",
+        "newswire":"9757569bf2a70531080cfcacbab30673:2:66889958"
+    },
+    "bitly":"b24ea44e05d6590d33e4f2a1affd45e67eaba118"
+}

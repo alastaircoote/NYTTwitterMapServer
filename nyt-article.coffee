@@ -10,8 +10,8 @@ module.exports = class NYTArticleLookup
         if @cachedArticles[url]
             return cb(@cachedArticles[url])
 
-        if url.indexOf("http://www.nytimes.com/") != 0
-            return cb(null)
+        if url.indexOf("www.nytimes.com/") != -1
+            cb(null)
         download
             "url": "http://api.nytimes.com/svc/news/v3/content.json"
             "method":"GET"

@@ -1,0 +1,17 @@
+{
+  "name": "nytweetmap",
+  "subdomain": "nytweetmap",
+  "scripts": {
+    "start": "server.coffee"
+  },
+  "version": "0.0.0-19",
+  "engines": {
+    "node": "0.8.x"
+  },
+  "dependencies": {
+    "socket.io": "*",
+    "async": "*",
+    "express": "*",
+    "twitter": "*"
+  }
+}

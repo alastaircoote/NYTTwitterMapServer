@@ -1,14 +1,28 @@
 socketio = require "socket.io"
 NYTArticles = require "./nyt-article"
 TwitterMonitor = require "./twitter-monitor"
-config = require "./config"
+
 geocode = require "./geocoder"
 async = require "async"
+express = require "express"
+http = require "http"
+
+app = express()
+config = require("./config")
 
 nyt = new NYTArticles(config.nyt)
 
-io = socketio.listen(8100)
-io.set( 'origins', '*:*' )
+happ = http.createServer(app)
+
+app.use("/",express.static(__dirname+"/web"))
+
+
+
+
+io = socketio.listen(happ)
+
+happ.listen(80)
+#io.set( 'origins', '*:*' )
 
 receive = (tweet,nytUrls) ->
     async.parallel [
@@ -16,20 +30,20 @@ receive = (tweet,nytUrls) ->
             nyt.articleByUrl nytUrls[0], (articleData) ->
                 console.log "callback for " + nytUrls[0]
                 if !articleData
-                    console.log nytUrls[0]
-                    return cb(null,null)
+                    cb(null,{article:{},location:{lat:40.75587, lng: -73.99048}})
+                    return
                 if !articleData.geo_facet
                     console.log "No location for article"
                     return cb(null, {article:articleData,location:{lat:40.75587, lng: -73.99048}})
                 else
                     console.log "Getting location"
-                    nyt.locationByName articleData.geo_facet[0], (locationData) ->
-                        location = null
-                        if !locationData
-                            console.log "No geocode info for " + articleData.geo_facet[0]
+                    geocode articleData.geo_facet[0], (loc) ->
+                        location = {lat:40.75587, lng: -73.99048}
+                        if loc && loc.results?.length > 0
+                            location = loc.results[0].geometry.location
                         else
-                            location = {lat: locationData.geocode.latitude, lng: locationData.geocode.longitude}
-                        return cb(null, {article:articleData, location: location})
+                            console.log "No geocode info for " + articleData.geo_facet[0]
+                        cb(null, {article:articleData, location: location})
         ,
         (cb) =>
             console.log "got to callback?"
@@ -45,14 +59,37 @@ receive = (tweet,nytUrls) ->
             console.log "Sending..."
             io.sockets.emit("tweet", {
                 from: results[0].location
-                to: results[1]
+                to: results[1],
+                tweet: tweet,
+                article: results[0].article
             })
+        else
+            console.log "FAILED", results
     #console.log tweet, nytUrls
 
 
 
 monitor = new TwitterMonitor()
-monitor.start(receive)
+#monitor.start(receive)
+
+activeClients = 0
+
+io.sockets.on 'connection', (socket) ->
+    if activeClients == 0
+        console.log "Receiving tweets"
+        monitor.start(receive)
+    activeClients++
+    console.log "#{activeClients} active clients"
+
+    socket.on "disconnect", () ->
+        activeClients--
+        console.log "#{activeClients} active clients"
+        if activeClients == 0 
+            console.log "Disconnecting stream"
+            monitor.stop()
+
+
+
 
 
 #nyt.articleByUrl "http://www.nytimes.com/2012/11/20/world/middleeast/hamas-strengthens-as-palestinian-authority-weakens.html", (data) ->
