@@ -87,9 +87,8 @@ define ["jslib/leaflet","./coordinate","jslib/jsbezier","jslib/jq.color"], (L, C
             #@canvas.fillStyle="#25426d"
 
             grd = @canvas.createLinearGradient(0, 0, @size.width, @size.height);
-            console.log @hue
-            first = $.Color({hue: @hue, saturation: 0.66, lightness: 0.43, alpha: 1}).toHexString()
-            mid = $.Color({hue: @hue, saturation: 0.56, lightness: 0.69, alpha: 1}).toHexString()
+            first = $.Color({hue: @hue, saturation: 0.36, lightness: 0.43, alpha: 1}).toHexString()
+            mid = $.Color({hue: @hue, saturation: 0.26, lightness: 0.69, alpha: 1}).toHexString()
 
 
 

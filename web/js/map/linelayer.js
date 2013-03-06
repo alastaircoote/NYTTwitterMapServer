@@ -104,16 +104,15 @@
           _this = this;
         this.canvas.strokeStyle = "white";
         grd = this.canvas.createLinearGradient(0, 0, this.size.width, this.size.height);
-        console.log(this.hue);
         first = $.Color({
           hue: this.hue,
-          saturation: 0.66,
+          saturation: 0.36,
           lightness: 0.43,
           alpha: 1
         }).toHexString();
         mid = $.Color({
           hue: this.hue,
-          saturation: 0.56,
+          saturation: 0.26,
           lightness: 0.69,
           alpha: 1
         }).toHexString();
