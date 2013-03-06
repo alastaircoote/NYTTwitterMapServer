@@ -33,7 +33,6 @@
         return $("#liConnecting").html("<a>Connected, awaiting tweets</a>");
       });
       return socket.on("tweet", function(tweet) {
-        $("#liConnecting").remove();
         return geocoder.geocode({
           'address': tweet.tweet.user.location
         }, function(results, status) {
@@ -41,6 +40,7 @@
           if (results.length === 0) {
             return;
           }
+          $("#liConnecting").remove();
           tweet.to = {
             lat: results[0].geometry.location.lat(),
             lng: results[0].geometry.location.lng()

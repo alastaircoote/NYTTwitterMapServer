@@ -22,10 +22,11 @@ requirejs ["./js/map/mapdisplay","jquery"], (MapDisplay) ->
         socket.on "connect", () ->
             $("#liConnecting").html("<a>Connected, awaiting tweets</a>")
         socket.on "tweet", (tweet) ->
-            $("#liConnecting").remove()
+            
 
             geocoder.geocode { 'address': tweet.tweet.user.location}, (results, status) ->
                 if results.length == 0 then return
+                $("#liConnecting").remove()
                 tweet.to =
                     lat: results[0].geometry.location.lat()
                     lng: results[0].geometry.location.lng()
