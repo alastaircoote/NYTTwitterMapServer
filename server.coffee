@@ -16,11 +16,10 @@ receive = (tweet,nytUrls) ->
             nyt.articleByUrl nytUrls[0], (articleData) ->
                 if !articleData
                     console.log nytUrls[0]
-                    cb(null,null)
-                    return
+                    return cb(null,null)
                 if !articleData.geo_facet
                     console.log "No location for article"
-                    cb(null, {article:articleData,location:{lat:40.75587, lng: -73.99048}})
+                    return cb(null, {article:articleData,location:{lat:40.75587, lng: -73.99048}})
                 else
                     console.log "Getting location"
                     nyt.locationByName articleData.geo_facet[0], (locationData) ->
@@ -29,7 +28,7 @@ receive = (tweet,nytUrls) ->
                             console.log "No geocode info for " + articleData.geo_facet[0]
                         else
                             location = {lat: locationData.geocode.latitude, lng: locationData.geocode.longitude}
-                        cb(null, {article:articleData, location: location})
+                        return cb(null, {article:articleData, location: location})
         ,
         (cb) =>
             geocode tweet.user.location, (loc) =>
