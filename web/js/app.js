@@ -23,7 +23,7 @@
     map = new MapDisplay($("#map"));
     return require(["socketio"], function() {
       var socket;
-      socket = io.connect('http://' + window.location.hostname + ':' + window.location.port);
+      socket = io.connect('http://' + window.location.hostname + ':6060');
       socket.on("connect", function() {
         return $("#liConnecting").html("<a>Connected, awaiting tweets</a>");
       });

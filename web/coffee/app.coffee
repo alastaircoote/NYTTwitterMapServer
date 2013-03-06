@@ -13,7 +13,7 @@ requirejs.config
 requirejs ["./js/map/mapdisplay","jquery"], (MapDisplay) ->
     map = new MapDisplay $("#map")
     require ["socketio"], () ->
-        socket = io.connect('http://' + window.location.hostname + ':' + window.location.port)
+        socket = io.connect('http://' + window.location.hostname + ':6060')
         socket.on "connect", () ->
             $("#liConnecting").html("<a>Connected, awaiting tweets</a>")
         socket.on "tweet", (tweet) ->
