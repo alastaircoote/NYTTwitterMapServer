@@ -11,32 +11,43 @@ requirejs.config
     paths:
         "jquery":"//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min"
         "socketio":"/socket.io/socket.io"
+        "gmaps": ""
  
 requirejs ["./js/map/mapdisplay","jquery"], (MapDisplay) ->
     map = new MapDisplay $("#map")
+    console.log google
+    geocoder = new google.maps.Geocoder()
+
     require ["socketio"], () ->
         socket = io.connect('http://' + window.location.hostname + ':' + window.location.port)
         socket.on "connect", () ->
             $("#liConnecting").html("<a>Connected, awaiting tweets</a>")
         socket.on "tweet", (tweet) ->
             $("#liConnecting").remove()
-            baseHue = Math.floor(Math.random() * 30) * 12
-            map.drawLine tweet.from, tweet.to, baseHue
-            title = "Could not trace to article"
-            li = $("<li><a href='#{tweet.tweet.entities.urls[0].expanded_url}' target='_blank'>#{tweet.tweet.text}<p></p></a><div style='clear:both'></div></li>")
-            from = tweet.article?.geo_facet?[0] || "NYC (assumed)"
 
-            if tweet.article && tweet.article.multimedia?.length
-                images = tweet.article.multimedia.filter (m) -> m.type == "image"
+            geocoder.geocode { 'address': tweet.tweet.user.location}, (results, status) ->
+                if results.length == 0 then return
+                tweet.to =
+                    lat: results[0].geometry.location.lat()
+                    lng: results[0].geometry.location.lng()
 
-                if images[0]
-                    $("a",li).prepend("<img src='#{images[0].url}'/>")
+                baseHue = Math.floor(Math.random() * 30) * 12
+                map.drawLine tweet.from, tweet.to, baseHue
+                title = "Could not trace to article"
+                li = $("<li><a href='#{tweet.tweet.entities.urls[0].expanded_url}' target='_blank'>#{tweet.tweet.text}<p></p></a><div style='clear:both'></div></li>")
+                from = tweet.article?.geo_facet?[0] || "NYC (assumed)"
+
+                if tweet.article && tweet.article.multimedia?.length
+                    images = tweet.article.multimedia.filter (m) -> m.type == "image"
+
+                    if images[0]
+                        $("a",li).prepend("<img src='#{images[0].url}'/>")
 
 
-            textcolor = $.Color({hue: baseHue, saturation: 0.26, lightness: 0.43, alpha: 1}).toHexString()
-            li.append("<div class='colorbox' style='background:#{textcolor}'></div>")
-            location = tweet.tweet.geo || tweet.tweet.user.location
-            $("p",li).html("<p >#{from} -> #{location}")
-            li.insertAfter($("#header"))
-            if li.parent().children().length == 20
-                li.parent().children().last().remove()
+                textcolor = $.Color({hue: baseHue, saturation: 0.26, lightness: 0.43, alpha: 1}).toHexString()
+                li.append("<div class='colorbox' style='background:#{textcolor}'></div>")
+                location = tweet.tweet.geo || tweet.tweet.user.location
+                $("p",li).html("<p >#{from} -> #{location}")
+                li.insertAfter($("#header"))
+                if li.parent().children().length == 20
+                    li.parent().children().last().remove()

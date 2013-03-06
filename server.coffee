@@ -46,6 +46,7 @@ receive = (tweet,nytUrls) ->
                         cb(null, {article:articleData, location: location})
         ,
         (cb) =>
+            return cb()
             console.log "got to callback?"
             geocode tweet.user.location, (loc) =>
                 retLoc = null
@@ -56,11 +57,11 @@ receive = (tweet,nytUrls) ->
                 cb(null,retLoc)
     ], (err,results) =>
         console.log "done"
-        if results[0] && results[0].article && results[1]
+        if results[0] && results[0].article
             console.log "Sending..."
             io.sockets.emit("tweet", {
                 from: results[0].location
-                to: results[1],
+                to: null,
                 tweet: tweet,
                 article: results[0].article
             })

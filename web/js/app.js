@@ -17,13 +17,16 @@
     },
     paths: {
       "jquery": "//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min",
-      "socketio": "/socket.io/socket.io"
+      "socketio": "/socket.io/socket.io",
+      "gmaps": ""
     }
   });
 
   requirejs(["./js/map/mapdisplay", "jquery"], function(MapDisplay) {
-    var map;
+    var geocoder, map;
     map = new MapDisplay($("#map"));
+    console.log(google);
+    geocoder = new google.maps.Geocoder();
     return require(["socketio"], function() {
       var socket;
       socket = io.connect('http://' + window.location.hostname + ':' + window.location.port);
@@ -31,34 +34,45 @@
         return $("#liConnecting").html("<a>Connected, awaiting tweets</a>");
       });
       return socket.on("tweet", function(tweet) {
-        var baseHue, from, images, li, location, textcolor, title, _ref, _ref1, _ref2;
         $("#liConnecting").remove();
-        baseHue = Math.floor(Math.random() * 30) * 12;
-        map.drawLine(tweet.from, tweet.to, baseHue);
-        title = "Could not trace to article";
-        li = $("<li><a href='" + tweet.tweet.entities.urls[0].expanded_url + "' target='_blank'>" + tweet.tweet.text + "<p></p></a><div style='clear:both'></div></li>");
-        from = ((_ref = tweet.article) != null ? (_ref1 = _ref.geo_facet) != null ? _ref1[0] : void 0 : void 0) || "NYC (assumed)";
-        if (tweet.article && ((_ref2 = tweet.article.multimedia) != null ? _ref2.length : void 0)) {
-          images = tweet.article.multimedia.filter(function(m) {
-            return m.type === "image";
-          });
-          if (images[0]) {
-            $("a", li).prepend("<img src='" + images[0].url + "'/>");
+        return geocoder.geocode({
+          'address': tweet.tweet.user.location
+        }, function(results, status) {
+          var baseHue, from, images, li, location, textcolor, title, _ref, _ref1, _ref2;
+          if (results.length === 0) {
+            return;
           }
-        }
-        textcolor = $.Color({
-          hue: baseHue,
-          saturation: 0.26,
-          lightness: 0.43,
-          alpha: 1
-        }).toHexString();
-        li.append("<div class='colorbox' style='background:" + textcolor + "'></div>");
-        location = tweet.tweet.geo || tweet.tweet.user.location;
-        $("p", li).html("<p >" + from + " -> " + location);
-        li.insertAfter($("#header"));
-        if (li.parent().children().length === 20) {
-          return li.parent().children().last().remove();
-        }
+          tweet.to = {
+            lat: results[0].geometry.location.lat(),
+            lng: results[0].geometry.location.lng()
+          };
+          baseHue = Math.floor(Math.random() * 30) * 12;
+          map.drawLine(tweet.from, tweet.to, baseHue);
+          title = "Could not trace to article";
+          li = $("<li><a href='" + tweet.tweet.entities.urls[0].expanded_url + "' target='_blank'>" + tweet.tweet.text + "<p></p></a><div style='clear:both'></div></li>");
+          from = ((_ref = tweet.article) != null ? (_ref1 = _ref.geo_facet) != null ? _ref1[0] : void 0 : void 0) || "NYC (assumed)";
+          if (tweet.article && ((_ref2 = tweet.article.multimedia) != null ? _ref2.length : void 0)) {
+            images = tweet.article.multimedia.filter(function(m) {
+              return m.type === "image";
+            });
+            if (images[0]) {
+              $("a", li).prepend("<img src='" + images[0].url + "'/>");
+            }
+          }
+          textcolor = $.Color({
+            hue: baseHue,
+            saturation: 0.26,
+            lightness: 0.43,
+            alpha: 1
+          }).toHexString();
+          li.append("<div class='colorbox' style='background:" + textcolor + "'></div>");
+          location = tweet.tweet.geo || tweet.tweet.user.location;
+          $("p", li).html("<p >" + from + " -> " + location);
+          li.insertAfter($("#header"));
+          if (li.parent().children().length === 20) {
+            return li.parent().children().last().remove();
+          }
+        });
       });
     });
   });
