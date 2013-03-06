@@ -14,6 +14,7 @@ receive = (tweet,nytUrls) ->
     async.parallel [
         (cb) =>
             nyt.articleByUrl nytUrls[0], (articleData) ->
+                console.log "callback for " + nytUrls[0]
                 if !articleData
                     console.log nytUrls[0]
                     return cb(null,null)
@@ -31,6 +32,7 @@ receive = (tweet,nytUrls) ->
                         return cb(null, {article:articleData, location: location})
         ,
         (cb) =>
+            console.log "got to callback?"
             geocode tweet.user.location, (loc) =>
                 retLoc = null
                 if loc && loc.results?.length > 0

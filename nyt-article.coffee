@@ -8,11 +8,10 @@ module.exports = class NYTArticleLookup
         if url.indexOf("http://nytim.es") == 0
             console.log "Shortened"
         if @cachedArticles[url]
-            cb(@cachedArticles[url])
-            return
+            return cb(@cachedArticles[url])
 
         if url.indexOf("http://www.nytimes.com/") != 0
-            cb(null)
+            return cb(null)
         download
             "url": "http://api.nytimes.com/svc/news/v3/content.json"
             "method":"GET"
